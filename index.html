@@ -3,224 +3,210 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Consistency = Success</title>
+    <title>Consistency = Success | Cloud Journal</title>
+    
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+
     <style>
-        :root {
-            --bg-color: #0f0f0f;
-            --card-bg: #1a1a1a;
-            --text-color: #e0e0e0;
-            --primary: #f39c12;
-            --success: #2ecc71;
-            --danger: #e74c3c;
-            --border: #333;
-        }
-
-        body {
-            font-family: 'Segoe UI', Arial, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            padding: 15px;
-            margin: 0;
-        }
-
+        :root { --bg: #0f0f0f; --card: #1a1a1a; --text: #e0e0e0; --primary: #f39c12; --success: #2ecc71; --danger: #e74c3c; --border: #333; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--bg); color: var(--text); padding: 15px; margin: 0; }
         .container { max-width: 1200px; margin: 0 auto; }
-        h1 { text-align: center; color: var(--primary); margin-bottom: 5px; text-transform: uppercase; }
-        .subtitle { text-align: center; color: #888; margin-bottom: 25px; font-size: 0.9em; }
+        .hidden { display: none !important; }
+        
+        /* Login Screen Styles */
+        .auth-container { max-width: 380px; margin: 80px auto; background: var(--card); padding: 30px; border-radius: 12px; border: 1px solid var(--border); text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        input, select { width: 100%; padding: 12px; margin: 10px 0; background: #252525; border: 1px solid var(--border); color: #fff; border-radius: 6px; box-sizing: border-box; }
+        button { width: 100%; padding: 12px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; transition: 0.3s; }
+        .btn-primary { background: var(--primary); color: #000; }
+        .btn-primary:hover { background: #e68a00; }
+        .btn-logout { background: #333; color: #fff; width: auto; padding: 6px 15px; font-size: 12px; }
 
-        /* Dashboard */
-        .dashboard {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 15px;
-            margin-bottom: 25px;
-        }
-
-        .card {
-            background: var(--card-bg);
-            padding: 15px;
-            border-radius: 10px;
-            border: 1px solid var(--border);
-            text-align: center;
-        }
-
-        .card h3 { margin: 0; font-size: 14px; color: #888; }
-        .card p { margin: 10px 0 0 0; font-size: 22px; font-weight: bold; }
-
-        /* Form */
-        .form-section {
-            background: var(--card-bg);
-            padding: 20px;
-            border-radius: 10px;
-            border: 1px solid var(--border);
-            margin-bottom: 25px;
-        }
-
-        .form-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-            gap: 12px;
-        }
-
-        label { font-size: 12px; color: #aaa; display: block; margin-bottom: 5px; }
-        input, select {
-            width: 100%; padding: 10px; background: #252525; border: 1px solid var(--border);
-            color: #fff; border-radius: 5px; box-sizing: border-box;
-        }
-
-        .btn-group { display: flex; gap: 10px; margin-top: 15px; }
-        button { flex: 1; padding: 12px; font-weight: bold; border: none; border-radius: 5px; cursor: pointer; }
-        .btn-add { background: var(--primary); color: #000; }
-        .btn-export { background: #444; color: #fff; }
-
-        /* Table */
-        .table-container { background: var(--card-bg); border-radius: 10px; overflow-x: auto; border: 1px solid var(--border); }
-        table { width: 100%; border-collapse: collapse; min-width: 900px; }
-        th, td { padding: 12px; text-align: left; border-bottom: 1px solid var(--border); font-size: 14px; }
+        /* Journal Table & Dashboard */
+        .dashboard { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-bottom: 20px; }
+        .card { background: var(--card); padding: 15px; border-radius: 10px; border: 1px solid var(--border); text-align: center; }
+        .form-section { background: var(--card); padding: 20px; border-radius: 10px; margin-bottom: 20px; border: 1px solid var(--border); }
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; }
+        .table-wrapper { overflow-x: auto; background: var(--card); border-radius: 10px; border: 1px solid var(--border); }
+        table { width: 100%; border-collapse: collapse; min-width: 850px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid var(--border); font-size: 13px; }
         th { background: #222; color: #888; }
-
-        .profit { color: var(--success); }
-        .loss { color: var(--danger); }
-        .badge { padding: 3px 7px; border-radius: 4px; font-size: 11px; font-weight: bold; }
-        .badge-buy { background: rgba(46, 204, 113, 0.2); color: var(--success); }
-        .badge-sell { background: rgba(231, 76, 60, 0.2); color: var(--danger); }
-
-        .action-btns { display: flex; gap: 5px; }
-        .edit-btn { background: #3498db; color: white; padding: 5px 8px; border-radius: 3px; font-size: 12px; border:none; cursor:pointer;}
-        .del-btn { background: var(--danger); color: white; padding: 5px 8px; border-radius: 3px; font-size: 12px; border:none; cursor:pointer;}
+        .profit { color: var(--success); } .loss { color: var(--danger); }
+        .action-btns { display: flex; gap: 8px; }
+        .edit-btn { background: #3498db; color: #fff; border:none; padding: 5px 10px; border-radius: 4px; cursor:pointer;}
+        .del-btn { background: var(--danger); color: #fff; border:none; padding: 5px 10px; border-radius: 4px; cursor:pointer;}
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>Consistency = Success</h1>
-    <div class="subtitle">Advanced Crypto Trading Journal</div>
-
-    <div class="dashboard">
-        <div class="card"><h3>মোট ট্রেড</h3><p id="stat-total">0</p></div>
-        <div class="card"><h3>উইন (Win)</h3><p id="stat-win" class="profit">0</p></div>
-        <div class="card"><h3>লস (Loss)</h3><p id="stat-loss" class="loss">0</p></div>
-        <div class="card"><h3>উইন রেট</h3><p id="stat-rate" style="color:var(--primary)">0%</p></div>
-        <div class="card"><h3>মোট প্রফিট</h3><p id="stat-pnl">$0.00</p></div>
+    <div id="auth-screen" class="auth-container">
+        <h1 style="color:var(--primary); margin-top:0;">BZ' Jurnal</h1>
+        <p style="color:#888; font-size: 14px;">আপনার ট্রেডিং জার্নাল সুরক্ষিত রাখুন</p>
+        <input type="email" id="email" placeholder="আপনার ইমেইল">
+        <input type="password" id="password" placeholder="পাসওয়ার্ড">
+        <button class="btn-primary" onclick="handleAuth()">Login / Sign Up</button>
+        <p id="auth-msg" style="font-size:12px; margin-top:15px; color:var(--danger)"></p>
+        <p style="font-size:11px; color:#666; margin-top:20px;">*প্রথমবার ব্যবহারের সময় যেকোনো ইমেইল ও পাসওয়ার্ড দিয়ে সাইন-আপ করে নিন।</p>
     </div>
 
-    <div class="form-section">
-        <form id="trade-form">
-            <input type="hidden" id="edit-id">
-            <div class="form-grid">
-                <div><label>কয়েন</label><input type="text" id="coin" placeholder="BTC" required></div>
-                <div><label>টাইপ</label><select id="type"><option value="BUY">BUY (Long)</option><option value="SELL">SELL (Short)</option></select></div>
-                <div><label>এন্ট্রি ($)</label><input type="number" id="entry" step="any" required></div>
-                <div><label>এক্সিট ($)</label><input type="number" id="exit" step="any" required></div>
-                <div><label>স্টপ লস ($)</label><input type="number" id="sl" step="any" placeholder="RR হিসাবের জন্য"></div>
-                <div><label>লিভারেজ</label><input type="number" id="lev" value="1" required></div>
-                <div><label>ইনভেস্ট ($)</label><input type="number" id="inv" required></div>
-                <div><label>তারিখ</label><input type="date" id="date" required></div>
-            </div>
-            <div class="btn-group">
-                <button type="submit" class="btn-add" id="submit-btn">জার্নালে যোগ করুন</button>
-                <button type="button" class="btn-export" onclick="exportCSV()">Backup (CSV)</button>
-            </div>
-        </form>
-    </div>
+    <div id="journal-screen" class="hidden">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h2 style="color:var(--primary); margin:0;">Consistency = Success</h2>
+            <button class="btn-logout" onclick="logout()">Logout</button>
+        </div>
 
-    <div class="table-container">
-        <table>
-            <thead>
-                <tr>
-                    <th>তারিখ</th>
-                    <th>কয়েন</th>
-                    <th>টাইপ</th>
-                    <th>এন্ট্রি/এক্সিট</th>
-                    <th>RR</th>
-                    <th>লাভ/লস ($)</th>
-                    <th>শতকরা (%)</th>
-                    <th>অ্যাকশন</th>
-                </tr>
-            </thead>
-            <tbody id="trade-list"></tbody>
-        </table>
+        <div class="dashboard">
+            <div class="card"><h3>মোট ট্রেড</h3><p id="stat-total">0</p></div>
+            <div class="card"><h3>উইন</h3><p id="stat-win" class="profit">0</p></div>
+            <div class="card"><h3>লস</h3><p id="stat-loss" class="loss">0</p></div>
+            <div class="card"><h3>উইন রেট</h3><p id="stat-rate" style="color:var(--primary)">0%</p></div>
+            <div class="card"><h3>প্রফিট ($)</h3><p id="stat-pnl">$0.00</p></div>
+        </div>
+
+        <div class="form-section">
+            <form id="trade-form">
+                <input type="hidden" id="edit-id">
+                <div class="form-grid">
+                    <div><label style="font-size:11px; color:#888">কয়েন</label><input type="text" id="coin" placeholder="BTC" required></div>
+                    <div><label style="font-size:11px; color:#888">টাইপ</label><select id="type"><option value="BUY">BUY</option><option value="SELL">SELL</option></select></div>
+                    <div><label style="font-size:11px; color:#888">এন্ট্রি ($)</label><input type="number" id="entry" step="any" required></div>
+                    <div><label style="font-size:11px; color:#888">এক্সিট ($)</label><input type="number" id="exit" step="any" required></div>
+                    <div><label style="font-size:11px; color:#888">স্টপ লস ($)</label><input type="number" id="sl" step="any"></div>
+                    <div><label style="font-size:11px; color:#888">লিভারেজ</label><input type="number" id="lev" value="1"></div>
+                    <div><label style="font-size:11px; color:#888">ইনভেস্ট ($)</label><input type="number" id="inv" required></div>
+                    <div><label style="font-size:11px; color:#888">তারিখ</label><input type="date" id="date" required></div>
+                </div>
+                <button type="submit" class="btn-primary" id="submit-btn" style="margin-top:15px;">ট্রেড সেভ করুন</button>
+            </form>
+        </div>
+
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr><th>তারিখ</th><th>কয়েন</th><th>টাইপ</th><th>এন্ট্রি/এক্সিট</th><th>RR</th><th>PnL ($)</th><th>শতকরা (%)</th><th>অ্যাকশন</th></tr>
+                </thead>
+                <tbody id="trade-list"></tbody>
+            </table>
+        </div>
     </div>
 </div>
 
 <script>
-    let trades = JSON.parse(localStorage.getItem('my_crypto_journal_v3')) || [];
+    // --- আপনার ফায়ারবেস কনফিগ ---
+    const firebaseConfig = {
+      apiKey: "AIzaSyCtMX_5nLTGSY07_p8K9W2p-Dk8H7_H6_k", // আপনার স্ক্রিনশট থেকে
+      authDomain: "bz--jurnal.firebaseapp.com",
+      projectId: "bz--jurnal",
+      storageBucket: "bz--jurnal.appspot.com",
+      messagingSenderId: "36426317634",
+      appId: "1:36426317634:web:3693d44364667f072bd2db",
+      measurementId: "G-G1CCMY1B2N"
+    };
 
-    const form = document.getElementById('trade-form');
-    document.getElementById('date').valueAsDate = new Date();
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
 
-    form.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const id = document.getElementById('edit-id').value;
-        
-        const tradeData = {
-            id: id ? parseInt(id) : Date.now(),
-            date: document.getElementById('date').value,
-            coin: document.getElementById('coin').value.toUpperCase(),
-            type: document.getElementById('type').value,
-            entry: parseFloat(document.getElementById('entry').value),
-            exit: parseFloat(document.getElementById('exit').value),
-            sl: parseFloat(document.getElementById('sl').value) || 0,
-            lev: parseFloat(document.getElementById('lev').value),
-            inv: parseFloat(document.getElementById('inv').value)
-        };
+    // --- অথেন্টিকেশন ফাংশন ---
+    function handleAuth() {
+        const email = document.getElementById('email').value;
+        const pass = document.getElementById('password').value;
+        if(!email || !pass) return alert("ইমেইল ও পাসওয়ার্ড দিন");
 
-        // Calculation
-        let rawPct = (tradeData.type === 'BUY') 
-            ? ((tradeData.exit - tradeData.entry) / tradeData.entry) 
-            : ((tradeData.entry - tradeData.exit) / tradeData.entry);
-        
-        tradeData.pct = rawPct * 100 * tradeData.lev;
-        tradeData.pnl = (tradeData.inv * tradeData.pct) / 100;
+        auth.signInWithEmailAndPassword(email, pass).catch(error => {
+            if (error.code === 'auth/user-not-found') {
+                auth.createUserWithEmailAndPassword(email, pass).catch(e => {
+                    document.getElementById('auth-msg').innerText = "ভুল ইমেইল বা পাসওয়ার্ড!";
+                });
+            } else {
+                document.getElementById('auth-msg').innerText = "লগইন ব্যর্থ হয়েছে!";
+            }
+        });
+    }
 
-        // RR Calculation: (Target - Entry) / (Entry - StopLoss)
-        if(tradeData.sl > 0 && tradeData.sl !== tradeData.entry) {
-            let risk = Math.abs(tradeData.entry - tradeData.sl);
-            let reward = Math.abs(tradeData.exit - tradeData.entry);
-            tradeData.rr = (reward / risk).toFixed(2);
-        } else { tradeData.rr = "N/A"; }
+    function logout() { auth.signOut(); }
 
-        if(id) {
-            trades = trades.map(t => t.id === parseInt(id) ? tradeData : t);
-            document.getElementById('submit-btn').innerText = "জার্নালে যোগ করুন";
-            document.getElementById('edit-id').value = "";
+    // লগইন স্টেট মনিটর
+    auth.onAuthStateChanged(user => {
+        if (user) {
+            document.getElementById('auth-screen').classList.add('hidden');
+            document.getElementById('journal-screen').classList.remove('hidden');
+            loadTrades(user.uid);
         } else {
-            trades.push(tradeData);
+            document.getElementById('auth-screen').classList.remove('hidden');
+            document.getElementById('journal-screen').classList.add('hidden');
         }
-
-        saveAndRender();
-        form.reset();
-        document.getElementById('date').valueAsDate = new Date();
     });
 
-    function saveAndRender() {
-        localStorage.setItem('my_crypto_journal_v3', JSON.stringify(trades));
-        render();
+    // --- ডাটাবেস ফাংশন ---
+    let trades = [];
+    function loadTrades(uid) {
+        db.collection('users').doc(uid).collection('trades').orderBy('date', 'desc')
+        .onSnapshot(snapshot => {
+            trades = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            render();
+        });
     }
+
+    document.getElementById('trade-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const user = auth.currentUser;
+        if(!user) return;
+
+        const editId = document.getElementById('edit-id').value;
+        const entry = parseFloat(document.getElementById('entry').value);
+        const exit = parseFloat(document.getElementById('exit').value);
+        const type = document.getElementById('type').value;
+        const lev = parseFloat(document.getElementById('lev').value);
+        const inv = parseFloat(document.getElementById('inv').value);
+        const sl = parseFloat(document.getElementById('sl').value) || 0;
+
+        let pct = (type === 'BUY' ? (exit - entry) / entry : (entry - exit) / entry) * 100 * lev;
+        let rr = (sl > 0 && sl !== entry) ? (Math.abs(exit - entry) / Math.abs(entry - sl)).toFixed(2) : "N/A";
+
+        const tradeData = {
+            coin: document.getElementById('coin').value.toUpperCase(),
+            type, entry, exit, sl, lev, inv, rr, pct,
+            pnl: (inv * pct) / 100,
+            date: document.getElementById('date').value
+        };
+
+        if(editId) {
+            await db.collection('users').doc(user.uid).collection('trades').doc(editId).update(tradeData);
+            document.getElementById('edit-id').value = "";
+            document.getElementById('submit-btn').innerText = "ট্রেড সেভ করুন";
+        } else {
+            await db.collection('users').doc(user.uid).collection('trades').add(tradeData);
+        }
+        e.target.reset();
+        document.getElementById('date').valueAsDate = new Date();
+    });
 
     function render() {
         const list = document.getElementById('trade-list');
         list.innerHTML = "";
         let win = 0, loss = 0, totalPnl = 0;
 
-        trades.sort((a,b) => new Date(b.date) - new Date(a.date)).forEach(t => {
+        trades.forEach(t => {
             totalPnl += t.pnl;
             if(t.pnl > 0) win++; else if(t.pnl < 0) loss++;
-
-            const row = document.createElement('tr');
-            row.innerHTML = `
+            const row = `<tr>
                 <td>${t.date}</td>
                 <td><b>${t.coin}</b> <small>${t.lev}x</small></td>
-                <td><span class="badge ${t.type==='BUY'?'badge-buy':'badge-sell'}">${t.type}</span></td>
+                <td><span style="color:${t.type==='BUY'?'#2ecc71':'#e74c3c'}">${t.type}</span></td>
                 <td>${t.entry} / ${t.exit}</td>
                 <td>1:${t.rr}</td>
-                <td class="${t.pnl>=0?'profit':'loss'}">${t.pnl>=0?'+':''}${t.pnl.toFixed(2)}</td>
+                <td class="${t.pnl>=0?'profit':'loss'}">${t.pnl.toFixed(2)}</td>
                 <td class="${t.pnl>=0?'profit':'loss'}">${t.pct.toFixed(2)}%</td>
                 <td class="action-btns">
-                    <button class="edit-btn" onclick="editTrade(${t.id})">Edit</button>
-                    <button class="del-btn" onclick="deleteTrade(${t.id})">Del</button>
+                    <button class="edit-btn" onclick="editTrade('${t.id}')">Edit</button>
+                    <button class="del-btn" onclick="deleteTrade('${t.id}')">Del</button>
                 </td>
-            `;
-            list.appendChild(row);
+            </tr>`;
+            list.innerHTML += row;
         });
 
         document.getElementById('stat-total').innerText = trades.length;
@@ -231,13 +217,12 @@
         document.getElementById('stat-pnl').className = totalPnl >= 0 ? 'profit' : 'loss';
     }
 
-    function deleteTrade(id) { if(confirm('নিশ্চিত ডিলিট করবেন?')) { trades = trades.filter(t => t.id !== id); saveAndRender(); } }
+    async function deleteTrade(id) { if(confirm('ডিলিট করবেন?')) await db.collection('users').doc(auth.currentUser.uid).collection('trades').doc(id).delete(); }
 
     function editTrade(id) {
         const t = trades.find(t => t.id === id);
         document.getElementById('edit-id').value = t.id;
         document.getElementById('coin').value = t.coin;
-        document.getElementById('type').value = t.type;
         document.getElementById('entry').value = t.entry;
         document.getElementById('exit').value = t.exit;
         document.getElementById('sl').value = t.sl;
@@ -248,19 +233,9 @@
         window.scrollTo(0,0);
     }
 
-    function exportCSV() {
-        let csv = "Date,Coin,Type,Entry,Exit,RR,PnL($),Pct(%)\n";
-        trades.forEach(t => { csv += `${t.date},${t.coin},${t.type},${t.entry},${t.exit},${t.rr},${t.pnl},${t.pct}\n`; });
-        const blob = new Blob([csv], { type: 'text/csv' });
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.setAttribute('href', url);
-        a.setAttribute('download', 'trading_journal.csv');
-        a.click();
-    }
-
-    render();
+    document.getElementById('date').valueAsDate = new Date();
 </script>
 
 </body>
-</html>
+    </html>
+    
