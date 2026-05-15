@@ -6,361 +6,261 @@
     <title>Consistency = Success</title>
     <style>
         :root {
-            --bg-color: #121212;
-            --card-bg: #1e1e1e;
-            --text-color: #ffffff;
-            --text-muted: #aaaaaa;
+            --bg-color: #0f0f0f;
+            --card-bg: #1a1a1a;
+            --text-color: #e0e0e0;
             --primary: #f39c12;
             --success: #2ecc71;
             --danger: #e74c3c;
-            --border: #333333;
-            --buy-color: #2ecc71;
-            --sell-color: #e74c3c;
+            --border: #333;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', Arial, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-color);
+            padding: 15px;
             margin: 0;
-            padding: 20px;
         }
 
-        .container {
-            max-width: 1100px;
-            margin: 0 auto;
-        }
+        .container { max-width: 1200px; margin: 0 auto; }
+        h1 { text-align: center; color: var(--primary); margin-bottom: 5px; text-transform: uppercase; }
+        .subtitle { text-align: center; color: #888; margin-bottom: 25px; font-size: 0.9em; }
 
-        h1 {
-            text-align: center;
-            color: var(--primary);
-            font-size: 36px;
-            margin-bottom: 5px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-        
-        .subtitle {
-            text-align: center;
-            color: var(--text-muted);
-            margin-bottom: 30px;
-            font-size: 14px;
-        }
-
-        /* Dashboard Styles */
+        /* Dashboard */
         .dashboard {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
         }
 
         .card {
-            background-color: var(--card-bg);
-            padding: 20px;
-            border-radius: 8px;
+            background: var(--card-bg);
+            padding: 15px;
+            border-radius: 10px;
             border: 1px solid var(--border);
             text-align: center;
         }
 
-        .card h3 {
-            margin: 0 0 10px 0;
-            color: var(--text-muted);
-            font-size: 16px;
-        }
+        .card h3 { margin: 0; font-size: 14px; color: #888; }
+        .card p { margin: 10px 0 0 0; font-size: 22px; font-weight: bold; }
 
-        .card p {
-            margin: 0;
-            font-size: 24px;
-            font-weight: bold;
-        }
-
-        /* Form Styles */
+        /* Form */
         .form-section {
-            background-color: var(--card-bg);
+            background: var(--card-bg);
             padding: 20px;
-            border-radius: 8px;
+            border-radius: 10px;
             border: 1px solid var(--border);
-            margin-bottom: 30px;
+            margin-bottom: 25px;
         }
 
         .form-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-            gap: 15px;
-            margin-bottom: 15px;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 12px;
         }
 
-        label {
-            display: block;
-            margin-bottom: 5px;
-            color: var(--text-muted);
-            font-size: 14px;
-        }
-
+        label { font-size: 12px; color: #aaa; display: block; margin-bottom: 5px; }
         input, select {
-            width: 100%;
-            padding: 10px;
-            background-color: #2a2a2a;
-            border: 1px solid var(--border);
-            border-radius: 4px;
-            color: #fff;
-            box-sizing: border-box;
+            width: 100%; padding: 10px; background: #252525; border: 1px solid var(--border);
+            color: #fff; border-radius: 5px; box-sizing: border-box;
         }
 
-        button {
-            background-color: var(--primary);
-            color: black;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: bold;
-            width: 100%;
-            font-size: 16px;
-        }
+        .btn-group { display: flex; gap: 10px; margin-top: 15px; }
+        button { flex: 1; padding: 12px; font-weight: bold; border: none; border-radius: 5px; cursor: pointer; }
+        .btn-add { background: var(--primary); color: #000; }
+        .btn-export { background: #444; color: #fff; }
 
-        button:hover {
-            opacity: 0.9;
-        }
+        /* Table */
+        .table-container { background: var(--card-bg); border-radius: 10px; overflow-x: auto; border: 1px solid var(--border); }
+        table { width: 100%; border-collapse: collapse; min-width: 900px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid var(--border); font-size: 14px; }
+        th { background: #222; color: #888; }
 
-        /* Table Styles */
-        .table-section {
-            background-color: var(--card-bg);
-            border-radius: 8px;
-            border: 1px solid var(--border);
-            overflow-x: auto;
-        }
+        .profit { color: var(--success); }
+        .loss { color: var(--danger); }
+        .badge { padding: 3px 7px; border-radius: 4px; font-size: 11px; font-weight: bold; }
+        .badge-buy { background: rgba(46, 204, 113, 0.2); color: var(--success); }
+        .badge-sell { background: rgba(231, 76, 60, 0.2); color: var(--danger); }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            text-align: left;
-        }
-
-        th, td {
-            padding: 12px 15px;
-            border-bottom: 1px solid var(--border);
-        }
-
-        th {
-            background-color: #252525;
-            color: var(--text-muted);
-        }
-
-        .profit-text { color: var(--success); }
-        .loss-text { color: var(--danger); }
-        
-        .badge {
-            padding: 3px 8px;
-            border-radius: 4px;
-            font-size: 12px;
-            font-weight: bold;
-        }
-        .badge-buy { background-color: rgba(46, 204, 113, 0.2); color: var(--buy-color); }
-        .badge-sell { background-color: rgba(231, 76, 60, 0.2); color: var(--sell-color); }
-
-        .delete-btn {
-            background-color: var(--danger);
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            border-radius: 4px;
-            cursor: pointer;
-        }
+        .action-btns { display: flex; gap: 5px; }
+        .edit-btn { background: #3498db; color: white; padding: 5px 8px; border-radius: 3px; font-size: 12px; border:none; cursor:pointer;}
+        .del-btn { background: var(--danger); color: white; padding: 5px 8px; border-radius: 3px; font-size: 12px; border:none; cursor:pointer;}
     </style>
 </head>
 <body>
 
 <div class="container">
     <h1>Consistency = Success</h1>
-    <div class="subtitle">Crypto Trading Journal</div>
+    <div class="subtitle">Advanced Crypto Trading Journal</div>
 
-    <!-- Dashboard/Stats -->
     <div class="dashboard">
-        <div class="card">
-            <h3>মোট ট্রেড</h3>
-            <p id="total-trades">0</p>
-        </div>
-        <div class="card">
-            <h3>উইন রেট (Win Rate)</h3>
-            <p id="win-rate" style="color: var(--primary);">0%</p>
-        </div>
-        <div class="card">
-            <h3>মোট লাভ/লস ($)</h3>
-            <p id="net-profit">0.00</p>
-        </div>
+        <div class="card"><h3>মোট ট্রেড</h3><p id="stat-total">0</p></div>
+        <div class="card"><h3>উইন (Win)</h3><p id="stat-win" class="profit">0</p></div>
+        <div class="card"><h3>লস (Loss)</h3><p id="stat-loss" class="loss">0</p></div>
+        <div class="card"><h3>উইন রেট</h3><p id="stat-rate" style="color:var(--primary)">0%</p></div>
+        <div class="card"><h3>মোট প্রফিট</h3><p id="stat-pnl">$0.00</p></div>
     </div>
 
-    <!-- Trade Input Form -->
     <div class="form-section">
-        <h3>নতুন ট্রেড ডাটা এন্ট্রি করুন</h3>
         <form id="trade-form">
+            <input type="hidden" id="edit-id">
             <div class="form-grid">
-                <div>
-                    <label for="coin-name">কয়েনের নাম</label>
-                    <input type="text" id="coin-name" placeholder="যেমন: BTC" required>
-                </div>
-                <div>
-                    <label for="trade-type">ট্রেড টাইপ</label>
-                    <select id="trade-type" required>
-                        <option value="BUY">BUY (Long)</option>
-                        <option value="SELL">SELL (Short)</option>
-                    </select>
-                </div>
-                <div>
-                    <label for="entry-price">এন্ট্রি প্রাইস ($)</label>
-                    <input type="number" id="entry-price" step="any" placeholder="0.00" required>
-                </div>
-                <div>
-                    <label for="exit-price">এক্সিট প্রাইস ($)</label>
-                    <input type="number" id="exit-price" step="any" placeholder="0.00" required>
-                </div>
-                <div>
-                    <label for="leverage">লিভারেজ (X)</label>
-                    <input type="number" id="leverage" min="1" max="125" value="1" placeholder="যেমন: 10" required>
-                </div>
-                <div>
-                    <label for="investment">মার্জিন/ইনভেস্ট ($)</label>
-                    <input type="number" id="investment" step="any" placeholder="যেমন: 10" required>
-                </div>
+                <div><label>কয়েন</label><input type="text" id="coin" placeholder="BTC" required></div>
+                <div><label>টাইপ</label><select id="type"><option value="BUY">BUY (Long)</option><option value="SELL">SELL (Short)</option></select></div>
+                <div><label>এন্ট্রি ($)</label><input type="number" id="entry" step="any" required></div>
+                <div><label>এক্সিট ($)</label><input type="number" id="exit" step="any" required></div>
+                <div><label>স্টপ লস ($)</label><input type="number" id="sl" step="any" placeholder="RR হিসাবের জন্য"></div>
+                <div><label>লিভারেজ</label><input type="number" id="lev" value="1" required></div>
+                <div><label>ইনভেস্ট ($)</label><input type="number" id="inv" required></div>
+                <div><label>তারিখ</label><input type="date" id="date" required></div>
             </div>
-            <button type="submit">জার্নালে যোগ করুন</button>
+            <div class="btn-group">
+                <button type="submit" class="btn-add" id="submit-btn">জার্নালে যোগ করুন</button>
+                <button type="button" class="btn-export" onclick="exportCSV()">Backup (CSV)</button>
+            </div>
         </form>
     </div>
 
-    <!-- Trade History Table -->
-    <div class="table-section">
+    <div class="table-container">
         <table>
             <thead>
                 <tr>
-                    <th>কয়েন</th>
+                    <th>তারিখ</th>
+                    <th>কয়েন</th>
                     <th>টাইপ</th>
-                    <th>লিভারেজ</th>
-                    <th>এন্ট্রি ($)</th>
-                    <th>এক্সিট ($)</th>
-                    <th>ইনভেস্ট ($)</th>
+                    <th>এন্ট্রি/এক্সিট</th>
+                    <th>RR</th>
                     <th>লাভ/লস ($)</th>
                     <th>শতকরা (%)</th>
                     <th>অ্যাকশন</th>
                 </tr>
             </thead>
-            <tbody id="trade-rows">
-                <!-- ডাইনামিক ডেটা এখানে আসবে -->
-            </tbody>
+            <tbody id="trade-list"></tbody>
         </table>
     </div>
 </div>
 
 <script>
-    const tradeForm = document.getElementById('trade-form');
-    const tradeRows = document.getElementById('trade-rows');
-    const totalTradesEl = document.getElementById('total-trades');
-    const winRateEl = document.getElementById('win-rate');
-    const netProfitEl = document.getElementById('net-profit');
+    let trades = JSON.parse(localStorage.getItem('my_crypto_journal_v3')) || [];
 
-    let trades = JSON.parse(localStorage.getItem('crypto_journal_v2')) || [];
+    const form = document.getElementById('trade-form');
+    document.getElementById('date').valueAsDate = new Date();
 
-    tradeForm.addEventListener('submit', function(e) {
+    form.addEventListener('submit', (e) => {
         e.preventDefault();
-
-        const coin = document.getElementById('coin-name').value.toUpperCase();
-        const type = document.getElementById('trade-type').value;
-        const entry = parseFloat(document.getElementById('entry-price').value);
-        const exit = parseFloat(document.getElementById('exit-price').value);
-        const leverage = parseFloat(document.getElementById('leverage').value);
-        const investment = parseFloat(document.getElementById('investment').value);
-
-        // লাভ বা লসের পার্সেন্টেজ হিসাব (লিভারেজ সহ)
-        let percentage = 0;
-        if (type === 'BUY') {
-            // লং ট্রেড: দাম বাড়লে লাভ
-            percentage = ((exit - entry) / entry) * 100 * leverage;
-        } else {
-            // শর্ট ট্রেড: দাম কমলে লাভ
-            percentage = ((entry - exit) / entry) * 100 * leverage;
-        }
-
-        // ডলার হিসেবে লাভ বা লস
-        const pnlAmount = (investment * percentage) / 100;
-
-        const newTrade = {
-            id: Date.now(),
-            coin,
-            type,
-            leverage,
-            entry,
-            exit,
-            investment,
-            pnlAmount,
-            percentage
+        const id = document.getElementById('edit-id').value;
+        
+        const tradeData = {
+            id: id ? parseInt(id) : Date.now(),
+            date: document.getElementById('date').value,
+            coin: document.getElementById('coin').value.toUpperCase(),
+            type: document.getElementById('type').value,
+            entry: parseFloat(document.getElementById('entry').value),
+            exit: parseFloat(document.getElementById('exit').value),
+            sl: parseFloat(document.getElementById('sl').value) || 0,
+            lev: parseFloat(document.getElementById('lev').value),
+            inv: parseFloat(document.getElementById('inv').value)
         };
 
-        trades.push(newTrade);
-        updateLocalStorage();
-        renderData();
-        tradeForm.reset();
-        document.getElementById('leverage').value = "1"; // ডিফল্ট ভ্যালু রিসেট
+        // Calculation
+        let rawPct = (tradeData.type === 'BUY') 
+            ? ((tradeData.exit - tradeData.entry) / tradeData.entry) 
+            : ((tradeData.entry - tradeData.exit) / tradeData.entry);
+        
+        tradeData.pct = rawPct * 100 * tradeData.lev;
+        tradeData.pnl = (tradeData.inv * tradeData.pct) / 100;
+
+        // RR Calculation: (Target - Entry) / (Entry - StopLoss)
+        if(tradeData.sl > 0 && tradeData.sl !== tradeData.entry) {
+            let risk = Math.abs(tradeData.entry - tradeData.sl);
+            let reward = Math.abs(tradeData.exit - tradeData.entry);
+            tradeData.rr = (reward / risk).toFixed(2);
+        } else { tradeData.rr = "N/A"; }
+
+        if(id) {
+            trades = trades.map(t => t.id === parseInt(id) ? tradeData : t);
+            document.getElementById('submit-btn').innerText = "জার্নালে যোগ করুন";
+            document.getElementById('edit-id').value = "";
+        } else {
+            trades.push(tradeData);
+        }
+
+        saveAndRender();
+        form.reset();
+        document.getElementById('date').valueAsDate = new Date();
     });
 
-    function deleteTrade(id) {
-        trades = trades.filter(trade => trade.id !== id);
-        updateLocalStorage();
-        renderData();
+    function saveAndRender() {
+        localStorage.setItem('my_crypto_journal_v3', JSON.stringify(trades));
+        render();
     }
 
-    function updateLocalStorage() {
-        localStorage.setItem('crypto_journal_v2', JSON.stringify(trades));
-    }
+    function render() {
+        const list = document.getElementById('trade-list');
+        list.innerHTML = "";
+        let win = 0, loss = 0, totalPnl = 0;
 
-    function renderData() {
-        tradeRows.innerHTML = '';
-        
-        let totalTrades = trades.length;
-        let winTrades = 0;
-        let totalPnL = 0;
-
-        trades.forEach(trade => {
-            totalPnL += trade.pnlAmount;
-            if (trade.pnlAmount > 0) {
-                winTrades++;
-            }
+        trades.sort((a,b) => new Date(b.date) - new Date(a.date)).forEach(t => {
+            totalPnl += t.pnl;
+            if(t.pnl > 0) win++; else if(t.pnl < 0) loss++;
 
             const row = document.createElement('tr');
-            const pnlClass = trade.pnlAmount >= 0 ? 'profit-text' : 'loss-text';
-            const badgeClass = trade.type === 'BUY' ? 'badge-buy' : 'badge-sell';
-            const sign = trade.pnlAmount >= 0 ? '+' : '';
-
             row.innerHTML = `
-                <td><b>${trade.coin}</b></td>
-                <td><span class="badge ${badgeClass}">${trade.type}</span></td>
-                <td>${trade.leverage}x</td>
-                <td>${trade.entry.toFixed(4)}</td>
-                <td>${trade.exit.toFixed(4)}</td>
-                <td>$${trade.investment.toFixed(2)}</td>
-                <td class="${pnlClass}">${sign}$${trade.pnlAmount.toFixed(2)}</td>
-                <td class="${pnlClass}">${sign}${trade.percentage.toFixed(2)}%</td>
-                <td><button class="delete-btn" onclick="deleteTrade(${trade.id})">ডিলিট</button></td>
+                <td>${t.date}</td>
+                <td><b>${t.coin}</b> <small>${t.lev}x</small></td>
+                <td><span class="badge ${t.type==='BUY'?'badge-buy':'badge-sell'}">${t.type}</span></td>
+                <td>${t.entry} / ${t.exit}</td>
+                <td>1:${t.rr}</td>
+                <td class="${t.pnl>=0?'profit':'loss'}">${t.pnl>=0?'+':''}${t.pnl.toFixed(2)}</td>
+                <td class="${t.pnl>=0?'profit':'loss'}">${t.pct.toFixed(2)}%</td>
+                <td class="action-btns">
+                    <button class="edit-btn" onclick="editTrade(${t.id})">Edit</button>
+                    <button class="del-btn" onclick="deleteTrade(${t.id})">Del</button>
+                </td>
             `;
-            tradeRows.appendChild(row);
+            list.appendChild(row);
         });
 
-        const winRate = totalTrades > 0 ? (winTrades / totalTrades) * 100 : 0;
-
-        totalTradesEl.innerText = totalTrades;
-        winRateEl.innerText = winRate.toFixed(1) + '%';
-        netProfitEl.innerText = (totalPnL >= 0 ? '+' : '') + totalPnL.toFixed(2);
-        
-        if (totalPnL >= 0) {
-            netProfitEl.className = 'profit-text';
-        } else {
-            netProfitEl.className = 'loss-text';
-        }
+        document.getElementById('stat-total').innerText = trades.length;
+        document.getElementById('stat-win').innerText = win;
+        document.getElementById('stat-loss').innerText = loss;
+        document.getElementById('stat-rate').innerText = trades.length ? ((win/trades.length)*100).toFixed(1)+'%' : '0%';
+        document.getElementById('stat-pnl').innerText = `$${totalPnl.toFixed(2)}`;
+        document.getElementById('stat-pnl').className = totalPnl >= 0 ? 'profit' : 'loss';
     }
 
-    renderData();
+    function deleteTrade(id) { if(confirm('নিশ্চিত ডিলিট করবেন?')) { trades = trades.filter(t => t.id !== id); saveAndRender(); } }
+
+    function editTrade(id) {
+        const t = trades.find(t => t.id === id);
+        document.getElementById('edit-id').value = t.id;
+        document.getElementById('coin').value = t.coin;
+        document.getElementById('type').value = t.type;
+        document.getElementById('entry').value = t.entry;
+        document.getElementById('exit').value = t.exit;
+        document.getElementById('sl').value = t.sl;
+        document.getElementById('lev').value = t.lev;
+        document.getElementById('inv').value = t.inv;
+        document.getElementById('date').value = t.date;
+        document.getElementById('submit-btn').innerText = "Update Trade Data";
+        window.scrollTo(0,0);
+    }
+
+    function exportCSV() {
+        let csv = "Date,Coin,Type,Entry,Exit,RR,PnL($),Pct(%)\n";
+        trades.forEach(t => { csv += `${t.date},${t.coin},${t.type},${t.entry},${t.exit},${t.rr},${t.pnl},${t.pct}\n`; });
+        const blob = new Blob([csv], { type: 'text/csv' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.setAttribute('href', url);
+        a.setAttribute('download', 'trading_journal.csv');
+        a.click();
+    }
+
+    render();
 </script>
 
 </body>
-    </html>
-    
+</html>
